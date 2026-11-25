@@ -231,6 +231,7 @@ img { display: block; max-width: 100%; }
     overflow: hidden;
     background: #e9e5da;
     border: 1px solid rgba(32, 37, 29, .10);
+    border-radius: 5px;
     animation: card-enter .7s var(--ease) both;
     transition: transform .4s var(--ease), box-shadow .4s var(--ease);
 }
@@ -300,6 +301,7 @@ img { display: block; max-width: 100%; }
     padding: .85rem 1rem;
     background: transparent;
     border: 1px solid rgba(32, 37, 29, .3);
+    border-radius: 5px;
     color: var(--ink);
     font-size: .78rem;
     transition: color .25s ease, background .25s ease, border-color .25s ease;
@@ -535,6 +537,7 @@ img { display: block; max-width: 100%; }
     gap: .8rem;
     padding: .9rem 1.2rem;
     border: 1px solid rgba(242, 239, 230, .4);
+    border-radius: 5px;
     color: var(--paper);
     font-size: .8rem;
     transition: background .3s ease, color .3s ease, border-color .3s ease;
