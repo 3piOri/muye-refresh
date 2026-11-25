@@ -1,0 +1,1579 @@
+﻿<proyecto>
+<archivo nombre="admin.css">
+:root {
+    color-scheme: light;
+    color: #20231c;
+    background: #f3f5ef;
+    font-family: var(--font-body);
+    font-synthesis: none;
+    --font-heading: 'New Tegomin', serif;
+    --font-body: 'New Tegomin', serif;
+}
+
+@font-face {
+    font-family: "Numbskull";
+    src: url("Numbskull.otf") format("opentype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+body, input, textarea, select, button {
+    font-family: var(--font-body);
+}
+
+.numbskull-brand {
+    font-family: "Numbskull", var(--font-body);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+input[type="file"]::file-selector-button,
+input[type="file"]::-webkit-file-upload-button {
+    font-family: var(--font-body);
+}
+
+.admin-shell {
+    width: min(100% - 2rem, 920px);
+    margin: 0 auto;
+    padding: 2rem 0 4rem;
+}
+
+.back-link {
+    color: #4a6e18;
+    text-decoration: none;
+}
+
+.admin-header {
+    margin: 2rem 0;
+}
+
+.eyebrow {
+    color: #4a6e18;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 0.25rem;
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.admin-header > p:last-child {
+    color: #64695f;
+}
+
+.panel,
+.product-entry {
+    padding: 1.25rem;
+    border: 1px solid #dce1d4;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(32, 35, 28, 0.05);
+}
+
+.panel h2,
+.catalog-heading h2 {
+    margin-bottom: 1rem;
+}
+
+.stack-form,
+.product-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.stack-form label,
+.product-form label {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 650;
+}
+
+.password-field {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.password-field input {
+    flex: 1;
+}
+
+input,
+textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid #c9cfc1;
+    border-radius: 8px;
+    background: #fff;
+    color: #20231c;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid #749445;
+    outline-offset: 1px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.primary-button,
+.secondary-button {
+    min-height: 42px;
+    padding: 0.6rem 1rem;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.primary-button {
+    background: #4a6e18;
+    color: white;
+}
+
+.secondary-button {
+    border: 1px solid #bdc5b2;
+    background: white;
+    color: #39442d;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.status-message {
+    margin-bottom: 1rem;
+}
+
+.status-message:empty {
+    display: none;
+}
+
+.status-message[data-type="error"] {
+    color: #a32121;
+}
+
+.status-message[data-type="success"] {
+    color: #356412;
+}
+
+.catalog-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+}
+
+.product-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.product-entry h3 {
+    margin-bottom: 1rem;
+}
+
+.product-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wide-field {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.delete-button {
+    border: 1px solid #b43a35;
+    background: white;
+    color: #a32121;
+}
+
+.empty-list {
+    padding: 1rem;
+    color: #64695f;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .product-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wide-field {
+        grid-column: auto;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+</archivo>
+<archivo nombre="admin.html">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>AdministraciÃ³n | MuyÃ«</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <main class="admin-shell">
+        <a class="back-link" href="./">&larr; Volver a MuyÃ«Â«</a>
+        <header class="admin-header">
+            <p class="eyebrow">MUYÃ‹Â· ADMINISTRACIÃ“N</p>
+            <h1>CatÃ¡logo</h1>
+            <p>Inicia sesiÃ³n para editar, agregar o eliminar productos.</p>
+        </header>
+
+        <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+
+        <section id="login-section" class="panel">
+            <h2>Iniciar sesiÃ³n</h2>
+            <form id="login-form" class="stack-form">
+                <label>
+                    Correo electrÃ³nico
+                    <input name="email" type="email" autocomplete="username" required>
+                </label>
+                <label>
+                    ContraseÃ±a
+                    <span class="password-field">
+                        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+                        <button id="toggle-password" class="secondary-button" type="button" aria-controls="login-password" aria-pressed="false">Mostrar</button>
+                    </span>
+                </label>
+                <button class="primary-button" type="submit">Entrar</button>
+            </form>
+        </section>
+
+        <section id="catalog-section" hidden>
+            <div class="catalog-heading">
+                <h2>Productos</h2>
+                <button id="logout-button" class="secondary-button" type="button">Cerrar sesiÃ³n</button>
+            </div>
+            <div id="product-list" class="product-list"></div>
+
+            <section class="panel add-panel">
+                <h2>Agregar producto</h2>
+                <form id="add-product-form" class="product-form">
+                    <label>
+                        Imagen (ruta del sitio o URL, si no subes un archivo)
+                        <input name="image" type="text" placeholder="nombre/.jpg.png.webp.gif.avif">
+                    </label>
+                    <label>
+                        Subir foto (opcional)
+                        <input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif">
+                    </label>
+                    <label>
+                        Nombre
+                        <input name="name" type="text" required>
+                    </label>
+                    <label class="wide-field">
+                        DescripciÃ³n
+                        <textarea name="description" rows="3" required></textarea>
+                    </label>
+                    <label>
+                        Precio
+                        <input name="price" type="text" placeholder="$380 MXN" required>
+                    </label>
+                    <label>
+                        Enlace de WhatsApp
+                        <input name="whatsappUrl" type="url" placeholder="https://wa.me/..." required>
+                    </label>
+                    <label>
+                        Etiqueta (opcional)
+                        <input name="tag" type="text" placeholder="Nuevo">
+                    </label>
+                    <div class="wide-field form-actions">
+                        <button class="primary-button" type="submit">Agregar al catÃƒÂ¡logo</button>
+                    </div>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="brand-font.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
+</archivo>
+<archivo nombre="admin.js">
+const statusMessage = document.querySelector("#status-message");
+const loginSection = document.querySelector("#login-section");
+const catalogSection = document.querySelector("#catalog-section");
+const loginForm = document.querySelector("#login-form");
+const loginPassword = loginForm.querySelector("#login-password");
+const togglePasswordButton = loginForm.querySelector("#toggle-password");
+const productList = document.querySelector("#product-list");
+const addProductForm = document.querySelector("#add-product-form");
+const config = window.supabaseConfig;
+const imageBucket = "product-images";
+const maxImageSize = 10 * 1024 * 1024;
+const imageExtensions = {
+    "image/avif": "avif",
+    "image/gif": "gif",
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp"
+};
+let supabaseClient = null;
+
+togglePasswordButton.addEventListener("click", () => {
+    const isPasswordVisible = loginPassword.type === "text";
+    loginPassword.type = isPasswordVisible ? "password" : "text";
+    togglePasswordButton.textContent = isPasswordVisible ? "Mostrar" : "Ocultar";
+    togglePasswordButton.setAttribute("aria-pressed", String(!isPasswordVisible));
+});
+
+function showStatus(message, type = "") {
+    statusMessage.textContent = message;
+    statusMessage.dataset.type = type;
+}
+
+function getWhatsAppUrl(form) {
+    const values = new FormData(form);
+    const whatsappUrl = values.get("whatsappUrl").trim();
+    if (new URL(whatsappUrl).protocol !== "https:") {
+        throw new Error("El enlace de WhatsApp debe usar HTTPS.");
+    }
+
+    return whatsappUrl;
+}
+
+function validateProductImage(form) {
+    const values = new FormData(form);
+    const hasUploadedFile = form.querySelector("input[name='imageFile']").files.length > 0;
+    if (!values.get("image").trim() && !hasUploadedFile) {
+        throw new Error("Indica una imagen o selecciona una foto para subir.");
+    }
+}
+
+function getProductValues(form, uploadedImage) {
+    const values = new FormData(form);
+    const whatsappUrl = getWhatsAppUrl(form);
+    const image = uploadedImage || values.get("image").trim();
+    if (!image) {
+        throw new Error("Indica una imagen o selecciona una foto para subir.");
+    }
+
+    return {
+        image,
+        name: values.get("name").trim(),
+        description: values.get("description").trim(),
+        price: values.get("price").trim(),
+        whatsapp_url: whatsappUrl,
+        tag: values.get("tag").trim() || null
+    };
+}
+
+function createField(labelText, name, value, options = {}) {
+    const label = document.createElement("label");
+    label.textContent = labelText;
+
+    const input = options.multiline
+        ? document.createElement("textarea")
+        : document.createElement("input");
+    input.name = name;
+    input.value = value || "";
+    input.required = options.required !== false;
+    if (options.multiline) {
+        input.rows = 3;
+    } else {
+        input.type = options.type || "text";
+    }
+
+    label.append(input);
+    if (options.wide) {
+        label.classList.add("wide-field");
+    }
+    return label;
+}
+
+async function uploadProductImage(form) {
+    getWhatsAppUrl(form);
+    validateProductImage(form);
+    const file = form.querySelector("input[name='imageFile']").files[0];
+    if (!file) {
+        return null;
+    }
+    if (!Object.prototype.hasOwnProperty.call(imageExtensions, file.type)) {
+        throw new Error("El archivo debe ser una imagen JPG, PNG, WebP, GIF o AVIF.");
+    }
+    if (file.size > maxImageSize) {
+        throw new Error("La imagen no puede superar los 10 MB.");
+    }
+
+    const path = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${imageExtensions[file.type]}`;
+    const { error } = await supabaseClient.storage
+        .from(imageBucket)
+        .upload(path, file, { cacheControl: "3600", contentType: file.type, upsert: false });
+    if (error) {
+        if (error.message === "Bucket not found") {
+            throw new Error('No existe el almacenamiento "product-images". Ejecuta el supabase-setup.sql actualizado en SQL Editor de Supabase.');
+        }
+        throw error;
+    }
+
+    const { data } = supabaseClient.storage.from(imageBucket).getPublicUrl(path);
+    return data.publicUrl;
+}
+
+function createProductForm(product) {
+    const form = document.createElement("form");
+    form.className = "product-entry product-form";
+    form.dataset.productId = product.id;
+
+    const heading = document.createElement("h3");
+    heading.textContent = product.name;
+    heading.className = "wide-field";
+    const imageField = createField("Imagen actual (ruta del sitio o URL)", "image", product.image, { required: false });
+    const imageUploadLabel = document.createElement("label");
+    imageUploadLabel.textContent = "Subir foto nueva (opcional)";
+    const imageUpload = document.createElement("input");
+    imageUpload.type = "file";
+    imageUpload.name = "imageFile";
+    imageUpload.accept = Object.keys(imageExtensions).join(",");
+    imageUploadLabel.append(imageUpload);
+    form.append(
+        heading,
+        imageField,
+        imageUploadLabel,
+        createField("Nombre", "name", product.name),
+        createField("DescripciÃƒÂ³n", "description", product.description, { multiline: true, wide: true }),
+        createField("Precio", "price", product.price),
+        createField("Enlace de WhatsApp", "whatsappUrl", product.whatsapp_url, { type: "url" }),
+        createField("Etiqueta (opcional)", "tag", product.tag, { required: false })
+    );
+
+    const actions = document.createElement("div");
+    actions.className = "wide-field form-actions";
+
+    const saveButton = document.createElement("button");
+    saveButton.className = "primary-button";
+    saveButton.type = "submit";
+    saveButton.textContent = "Guardar cambios";
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "primary-button delete-button";
+    deleteButton.type = "button";
+    deleteButton.dataset.action = "delete";
+    deleteButton.textContent = "Eliminar producto";
+
+    actions.append(saveButton, deleteButton);
+    form.append(actions);
+    return form;
+}
+
+async function loadProducts() {
+    if (!supabaseClient) {
+        throw new Error("Supabase no estÃƒÂ¡ inicializado.");
+    }
+
+    showStatus("Cargando catÃƒÂ¡logoÃ¢â‚¬Â¦");
+    const { data, error } = await supabaseClient
+        .from("products")
+        .select("id, image, name, description, price, whatsapp_url, tag, sort_order")
+        .order("sort_order", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    productList.replaceChildren();
+    if (data.length === 0) {
+        const emptyMessage = document.createElement("p");
+        emptyMessage.className = "empty-list";
+        emptyMessage.textContent = "TodavÃƒÂ­a no hay productos. Agrega el primero abajo.";
+        productList.append(emptyMessage);
+    } else {
+        data.forEach((product) => productList.append(createProductForm(product)));
+    }
+    showStatus("");
+}
+
+function setAuthenticated(isAuthenticated) {
+    loginSection.hidden = isAuthenticated;
+    catalogSection.hidden = !isAuthenticated;
+}
+
+if (!config || !config.url || !config.anonKey) {
+    showStatus("Falta configurar la URL y la clave pÃƒÂºblica de Supabase en supabase-config.js.", "error");
+    loginForm.querySelector("button[type='submit']").disabled = true;
+} else if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    showStatus("No se pudo cargar Supabase. Revisa tu conexiÃƒÂ³n a internet e intÃƒÂ©ntalo de nuevo.", "error");
+    loginForm.querySelector("button[type='submit']").disabled = true;
+} else {
+    supabaseClient = window.supabase.createClient(config.url, config.anonKey);
+
+    async function openCatalog() {
+        setAuthenticated(true);
+        try {
+            await loadProducts();
+        } catch (error) {
+            console.error(error);
+            showStatus(`No se pudo cargar el catÃƒÂ¡logo. Verifica los permisos de administrador: ${error.message}`, "error");
+        }
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const values = new FormData(loginForm);
+        const submitButton = loginForm.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+        showStatus("Validando accesoÃ¢â‚¬Â¦");
+
+        try {
+            const { error } = await supabaseClient.auth.signInWithPassword({
+                email: values.get("email").trim(),
+                password: values.get("password")
+            });
+
+            if (error) {
+                showStatus(`No se pudo iniciar sesiÃƒÂ³n: ${error.message}`, "error");
+                return;
+            }
+            await openCatalog();
+        } catch (error) {
+            showStatus(`No se pudo iniciar sesiÃƒÂ³n: ${error.message}`, "error");
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+
+    document.querySelector("#logout-button").addEventListener("click", async () => {
+        try {
+            const { error } = await supabaseClient.auth.signOut();
+            if (error) {
+                showStatus(`No se pudo cerrar sesiÃƒÂ³n: ${error.message}`, "error");
+                return;
+            }
+            setAuthenticated(false);
+            showStatus("SesiÃƒÂ³n cerrada.", "success");
+        } catch (error) {
+            showStatus(`No se pudo cerrar sesiÃƒÂ³n: ${error.message}`, "error");
+        }
+    });
+
+    productList.addEventListener("submit", async (event) => {
+        if (!(event.target instanceof HTMLFormElement)) {
+            return;
+        }
+        event.preventDefault();
+        const form = event.target;
+        const saveButton = form.querySelector("button[type='submit']");
+        saveButton.disabled = true;
+        try {
+            const uploadedImage = await uploadProductImage(form);
+            const { error } = await supabaseClient
+                .from("products")
+                .update(getProductValues(form, uploadedImage))
+                .eq("id", form.dataset.productId);
+
+            if (error) {
+                throw error;
+            }
+            showStatus("Producto actualizado.", "success");
+            await loadProducts();
+        } catch (error) {
+            showStatus(`No se pudieron guardar los cambios: ${error.message}`, "error");
+        } finally {
+            saveButton.disabled = false;
+        }
+    });
+
+    productList.addEventListener("click", async (event) => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+        const button = event.target.closest("button[data-action='delete']");
+        if (!button) {
+            return;
+        }
+
+        const form = button.closest("form");
+        const productName = form.querySelector("input[name='name']").value;
+        if (!window.confirm(`Ã‚Â¿Eliminar por completo "${productName}"? Esta acciÃƒÂ³n no se puede deshacer.`)) {
+            return;
+        }
+
+        button.disabled = true;
+        try {
+            const { error } = await supabaseClient
+                .from("products")
+                .delete()
+                .eq("id", form.dataset.productId);
+            if (error) {
+                throw error;
+            }
+            showStatus("Producto eliminado.", "success");
+            await loadProducts();
+        } catch (error) {
+            button.disabled = false;
+            showStatus(`No se pudo eliminar el producto: ${error.message}`, "error");
+        }
+    });
+
+    addProductForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const submitButton = addProductForm.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+
+        try {
+            const uploadedImage = await uploadProductImage(addProductForm);
+            const { data, error: listError } = await supabaseClient
+                .from("products")
+                .select("sort_order")
+                .order("sort_order", { ascending: false })
+                .limit(1);
+            if (listError) {
+                throw listError;
+            }
+
+            const nextOrder = data.length ? data[0].sort_order + 1 : 0;
+            const { error } = await supabaseClient
+                .from("products")
+                .insert({ ...getProductValues(addProductForm, uploadedImage), sort_order: nextOrder });
+            if (error) {
+                throw error;
+            }
+
+            addProductForm.reset();
+            showStatus("Producto agregado.", "success");
+            await loadProducts();
+        } catch (error) {
+            showStatus(`No se pudo agregar el producto: ${error.message}`, "error");
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+
+    supabaseClient.auth.getSession()
+        .then(({ data, error }) => {
+            if (error) {
+                showStatus(`No se pudo verificar la sesiÃƒÂ³n: ${error.message}`, "error");
+                return;
+            }
+            if (data.session) {
+                openCatalog();
+            }
+        })
+        .catch((error) => {
+            showStatus(`No se pudo verificar la sesiÃƒÂ³n: ${error.message}`, "error");
+        });
+}
+</archivo>
+<archivo nombre="brand-font.js">
+(() => {
+    const skippedElements = "script, style, noscript, textarea, input, select, option";
+
+    function formatTextNode(node) {
+        const text = node.nodeValue;
+        const alreadyFormatted = node.parentElement
+            && node.parentElement.closest(".numbskull-brand");
+        if (!text || !/muyÃ«/i.test(text) || alreadyFormatted) {
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        text.split(/(muyÃ«)/gi).forEach((part, index) => {
+            if (!part) {
+                return;
+            }
+
+            if (index % 2 === 1) {
+                const brand = document.createElement("span");
+                brand.className = "numbskull-brand";
+                brand.textContent = part;
+                fragment.append(brand);
+            } else {
+                fragment.append(document.createTextNode(part));
+            }
+        });
+
+        node.replaceWith(fragment);
+    }
+
+    function formatNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            formatTextNode(node);
+            return;
+        }
+
+        if (!(node instanceof Element) || node.matches(skippedElements)) {
+            return;
+        }
+
+        if (node.classList.contains("numbskull-brand")) {
+            return;
+        }
+
+        Array.from(node.childNodes).forEach(formatNode);
+    }
+
+    formatNode(document.body);
+
+    new MutationObserver((records) => {
+        records.forEach((record) => {
+            if (record.type === "characterData") {
+                formatTextNode(record.target);
+                return;
+            }
+
+            Array.from(record.addedNodes).forEach(formatNode);
+        });
+    }).observe(document.body, { childList: true, characterData: true, subtree: true });
+})();
+
+</archivo>
+<archivo nombre="index.html">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f2efe6">
+    <meta name="description" content="MuyÃ«: piezas Ãºnicas elaboradas a partir de textiles recuperados. DiseÃ±o artesanal, objetos irrepetibles.">
+    <title>MuyÃ« â€” Reimagining what already exists</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MuyÃ« â€” Reimagining what already exists">
+    <meta property="og:description" content="Piezas Ãºnicas elaboradas a partir de textiles recuperados. No hay dos iguales.">
+    <meta property="og:image" content="https://3piori.github.io/muye/v2.png">
+    <meta property="og:image:secure_url" content="https://3piori.github.io/muye/v2.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1137">
+    <meta property="og:image:height" content="595">
+    <meta property="og:url" content="https://3piori.github.io/muye/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MuyÃ« â€” Reimagining what already exists">
+    <meta name="twitter:description" content="Piezas Ãºnicas elaboradas a partir de textiles recuperados.">
+    <meta name="twitter:image" content="https://3piori.github.io/muye/v2.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-grain" aria-hidden="true"></div>
+            <div class="hero-orbit" aria-hidden="true">
+                <img src="1.png" alt="">
+            </div>
+            <div class="hero-content">
+                <p class="eyebrow"><span></span> OBJETOS Â· TEXTILES Â· REIMAGINADOS</p>
+                <h1 id="hero-title">Lo que existe,<br><em>puede renacer.</em></h1>
+                <p class="hero-description">Piezas Ãºnicas elaboradas a partir de textiles recuperados. Hechas a mano, sin repetir una sola historia.</p>
+                <div class="hero-actions">
+                    <a href="#productos" class="button-primary">Explorar colecciÃ³n <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+                    <span class="hero-note">ONE OF A KIND â€” ALWAYS</span>
+                </div>
+            </div>
+            <div class="hero-side-note" aria-hidden="true">RECLAIMED TEXTILES / 001â€”âˆž</div>
+            <div class="hero-bottom">
+                <span>DISEÃ‘O CONSCIENTE</span>
+                <span>PLAYA DEL CARMEN Â· MÃ‰XICO</span>
+            </div>
+        </section>
+
+        <section class="manifesto-strip" aria-label="Manifiesto">
+            <span>REIMAGINING WHAT ALREADY EXISTS</span>
+            <span class="manifesto-mark">âœ³</span>
+            <span>NO TWO ARE ALIKE</span>
+            <span class="manifesto-mark">âœ³</span>
+            <span>MADE BY HAND</span>
+        </section>
+
+        <section class="products-section" id="productos">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow"><span></span> PIEZAS IRREPETIBLES / 01</p>
+                    <h2>La colecciÃ³n<span class="heading-period">.</span></h2>
+                </div>
+                <p class="section-intro">Cada textil tiene una vida anterior.<br>Nosotros imaginamos la siguiente.</p>
+            </div>
+
+            <div class="products-grid" id="products-grid" aria-live="polite"></div>
+            <div class="catalog-footnote">
+                <span>01 â€” OBJETOS CON HISTORIA</span>
+                <span>HECHO A MANO Â· HECHO PARA DURAR</span>
+            </div>
+        </section>
+
+        <section class="about-section" id="nosotros">
+            <div class="about-index">02 / NUESTRA FILOSOFÃA</div>
+            <div class="about-container">
+                <p class="eyebrow eyebrow-light"><span></span> MENOS DESECHO. MÃS IMAGINACIÃ“N.</p>
+                <h2>Nada se desperdicia.<br><em>Todo puede transformarse.</em></h2>
+                <div class="about-copy">
+                    <p class="about-lead">MuyÃ« nace de una idea sencilla: los materiales merecen mÃ¡s de una vida.</p>
+                    <p>Transformamos textiles rescatados en piezas Ãºnicas, donde se encuentran el color, la memoria, la imperfecciÃ³n y la imaginaciÃ³n. Cada corte, cada combinaciÃ³n y cada costura hacen que una pieza sea distinta a cualquier otra.</p>
+                    <p>Hacemos envÃ­os a todo el paÃ­s. EscrÃ­benos para conocer la disponibilidad y encontrar tu prÃ³xima pieza favorita.</p>
+                </div>
+                <a href="https://www.instagram.com/mu.yume/" target="_blank" rel="noopener noreferrer" class="button-outline">
+                    <i class="fa-brands fa-instagram" aria-hidden="true"></i> Seguir el universo MuyÃ«
+                    <i class="fa-solid fa-arrow-up-right-from-square button-arrow" aria-hidden="true"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Playa del Carmen, Quintana Roo Â· MÃ©xico</p>
+        <p>Â© 2026 MUYÃ‹. Todos los derechos reservados.</p>
+        <span class="footer-caption">RECLAIM Â· REWORK Â· REIMAGINE</span>
+    </footer>
+
+    <a href="https://wa.me/525550648075?text=Hola!%20Me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20sus%20productos."
+       class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" title="Contacto por WhatsApp">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+        <span>Hablemos</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="services-data.js"></script>
+    <script src="brand-font.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+</archivo>
+<archivo nombre="script.js">
+const productsGrid = document.querySelector("#products-grid");
+
+if (!productsGrid) {
+    throw new Error('No se encontrÃ³ el contenedor "#products-grid".');
+}
+
+function createProductCard(product) {
+    const orderUrl = new URL(product.whatsappUrl, window.location.href);
+    if (orderUrl.protocol !== "https:") {
+        throw new Error(`El enlace para pedir "${product.name}" debe usar HTTPS.`);
+    }
+
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    const imageContainer = document.createElement("div");
+    imageContainer.className = "product-image";
+
+    const image = document.createElement("img");
+    image.src = product.image;
+    image.alt = product.name;
+    image.loading = "lazy";
+    imageContainer.append(image);
+
+    if (product.tag) {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = product.tag;
+        imageContainer.append(tag);
+    }
+
+    const info = document.createElement("div");
+    info.className = "product-info";
+
+    const name = document.createElement("h3");
+    name.textContent = product.name;
+
+    const price = document.createElement("p");
+    price.className = "price";
+    price.textContent = product.price;
+
+    const description = document.createElement("p");
+    description.className = "description";
+    description.textContent = product.description;
+
+    const orderButton = document.createElement("a");
+    orderButton.href = orderUrl.href;
+    orderButton.className = "btn-ws";
+    orderButton.target = "_blank";
+    orderButton.rel = "noopener noreferrer";
+
+    const whatsappIcon = document.createElement("i");
+    whatsappIcon.className = "fa-brands fa-whatsapp";
+    orderButton.append(whatsappIcon, document.createTextNode(" Pedir por WhatsApp"));
+
+    info.append(name, price, description, orderButton);
+    card.append(imageContainer, info);
+
+    return card;
+}
+
+function renderProducts(products) {
+    productsGrid.replaceChildren();
+
+    if (products.length === 0) {
+        const emptyMessage = document.createElement("p");
+        emptyMessage.className = "catalog-empty";
+        emptyMessage.textContent = "Estamos preparando nuevos productos.";
+        productsGrid.append(emptyMessage);
+        return;
+    }
+
+    products.forEach((product) => {
+        const requiredFields = ["image", "name", "description", "price", "whatsappUrl"];
+        const missingField = requiredFields.find((field) => (
+            typeof product[field] !== "string" || product[field].trim() === ""
+        ));
+
+        if (missingField) {
+            throw new Error(`Falta el campo "${missingField}" en un producto del catÃ¡logo.`);
+        }
+
+        productsGrid.append(createProductCard(product));
+    });
+}
+
+function showCatalogError(message) {
+    const error = document.createElement("p");
+    error.className = "catalog-error";
+    error.setAttribute("role", "alert");
+    error.textContent = message;
+    productsGrid.replaceChildren(error);
+}
+
+async function loadProducts() {
+    const config = window.supabaseConfig;
+    const hasSupabaseConfig = config && config.url && config.anonKey;
+
+    if (!hasSupabaseConfig) {
+        const products = window.servicesData && window.servicesData.products;
+        if (!Array.isArray(products)) {
+            throw new Error("No se encontrÃ³ una lista vÃ¡lida de productos en services-data.js.");
+        }
+        renderProducts(products);
+        return;
+    }
+
+    if (!window.supabase || typeof window.supabase.createClient !== "function") {
+        throw new Error("No se pudo cargar Supabase. Revisa tu conexiÃ³n a internet e intÃ©ntalo de nuevo.");
+    }
+
+    const client = window.supabase.createClient(config.url, config.anonKey);
+    const { data, error } = await client
+        .from("products")
+        .select("image, name, description, price, whatsapp_url, tag")
+        .order("sort_order", { ascending: true });
+
+    if (error) {
+        throw new Error(`No se pudo cargar el catÃ¡logo: ${error.message}`);
+    }
+
+    renderProducts(data.map((product) => ({
+        ...product,
+        whatsappUrl: product.whatsapp_url
+    })));
+}
+
+loadProducts().catch((error) => {
+    console.error(error);
+    showCatalogError("No pudimos cargar el catÃ¡logo en este momento. Intenta de nuevo mÃƒÂ¡s tarde.");
+});
+</archivo>
+<archivo nombre="services-data.js">
+// Edit the product image, name, description, price and WhatsApp order link here.
+window.servicesData = {
+    products: [
+        {
+            image: "colcha.jfif",
+            name: 'Kiruto "MUYÃ‹"',
+            description: "Colcha confeccionada con retazos de tela con estampado exclusivo de alta densidad.",
+            price: "$2,650 MXN",
+            whatsappUrl: "https://wa.me/525550648075?text=Hola!%20Me%20interesa%20comprar%20la%20Colcha%20MuyÃ«Â«",
+            tag: "Nuevo"
+        },
+        {
+            image: "monedero.jfif",
+            name: 'Monedero "Saifu"',
+            description: "Cartera/monedero de diseÃƒÂ±o tradicional y ÃƒÂºnico.",
+            price: "$380 MXN",
+            whatsappUrl: "https://wa.me/525550648075?text=Hola!%20Me%20interesa%20comprar%20el%20Monedero%20Sakura%20Cyber"
+        },
+        {
+            image: "6.png",
+            name: 'Las trianguladas "Upcycle textile collection"',
+            description: "AKARI. Bolsita artesanal inspirada en el diseÃƒÂ±o japonÃƒÂ©s que evoca la tradicional kinchaku. Confeccionada con telas reutilizadas, Explora el color, las formas geomÃƒÂ©tricas y los detalles textiles.Esta pieza cuenta con ocho presillas de tela para el cordÃƒÂ³n de cierre.",
+            price: "$1,190 MXN",
+            whatsappUrl: "https://wa.me/525550648075?text=Hola!%20Me%20interesa%20comprar%20la%20bolsita%20Akari"
+        },
+        {
+            image: "7.png",
+            name: 'Bolsita "Kinchaku"',
+            description: "Bolsita para monedas, un amuleto de la suerte o una cajita para regalar joyas. TÃƒÂ©cnica tradicional de plegado y costura",
+            price: "$370 MXN",
+            whatsappUrl: "https://wa.me/525550648075?text=Hola!%20Me%20interesa%20comprar%20la%20bolsita%20kinchaku"
+        }
+    ]
+};
+</archivo>
+<archivo nombre="style.css">
+/* =========================================================
+   MUYÃ‹ â€” RECLAIMED OBJECTS STUDIO
+   DirecciÃ³n: editorial contemporÃ¡nea / artesanÃ­a premium
+   TipografÃ­a original conservada: New Tegomin
+   ========================================================= */
+
+@font-face {
+    font-family: "Numbskull";
+    src: url("Numbskull.otf") format("opentype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+:root {
+    color-scheme: light;
+    --paper: #f2efe6;
+    --paper-deep: #e8e3d7;
+    --ink: #20251d;
+    --ink-soft: #55594e;
+    --olive: #536342;
+    --olive-dark: #35432d;
+    --acid: #c5d17b;
+    --clay: #bd684b;
+    --line: rgba(32, 37, 29, .17);
+    --white: #fffdf7;
+    --font-heading: 'New Tegomin', serif;
+    --font-body: 'New Tegomin', serif;
+    --ease: cubic-bezier(.2, .75, .25, 1);
+    --page-gutter: clamp(1.2rem, 6vw, 6.5rem);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 1rem; }
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: clip;
+}
+body, button, a { font-family: var(--font-body); }
+.numbskull-brand { font-family: "Numbskull", var(--font-body); }
+a { color: inherit; text-decoration: none; }
+button { color: inherit; }
+img { display: block; max-width: 100%; }
+::selection { color: var(--paper); background: var(--olive); }
+
+/* Hero */
+.hero {
+    position: relative;
+    isolation: isolate;
+    min-height: min(760px, 100svh);
+    display: flex;
+    align-items: center;
+    padding: 6rem var(--page-gutter) 7rem;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 78% 32%, rgba(197, 209, 123, .23), transparent 35%),
+        radial-gradient(ellipse at 8% 90%, rgba(189, 104, 75, .10), transparent 32%),
+        var(--paper);
+}
+.hero::before {
+    content: "M";
+    position: absolute;
+    z-index: -1;
+    right: 5%;
+    top: 48%;
+    transform: translateY(-50%) rotate(-8deg);
+    color: rgba(83, 99, 66, .055);
+    font-size: clamp(24rem, 53vw, 58rem);
+    line-height: .7;
+    pointer-events: none;
+}
+.hero-orbit {
+    position: absolute;
+    z-index: 0;
+    right: 10%;
+    top: 13%;
+    width: clamp(160px, 25vw, 340px);
+    height: clamp(160px, 25vw, 340px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+.hero-orbit img {
+    width: 86%;
+    height: 86%;
+    object-fit: contain;
+}
+.hero-content { position: relative; z-index: 1; width: min(850px, 78%); animation: hero-enter .9s var(--ease) both; }
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    margin: 0 0 1.5rem;
+    color: var(--olive);
+    font-family: var(--font-body);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.5;
+}
+.eyebrow > span {
+    display: inline-block;
+    width: 7px; height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: var(--clay);
+    box-shadow: 0 0 0 4px rgba(189, 104, 75, .12);
+}
+.hero h1 {
+    max-width: 900px;
+    margin: 0;
+    font-size: clamp(4rem, 9.6vw, 9.5rem);
+    font-weight: 400;
+    letter-spacing: -.075em;
+    line-height: .98;
+}
+.hero h1 em, .about-container h2 em {
+    color: var(--olive);
+    font-weight: 400;
+}
+.hero-description {
+    max-width: 430px;
+    margin: 2rem 0 2.3rem;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.35vw, 1.18rem);
+    line-height: 1.8;
+}
+.hero-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.button-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.7rem;
+    padding: 1rem 1.35rem;
+    background: var(--olive-dark);
+    color: var(--white);
+    border: 1px solid var(--olive-dark);
+    font-size: .85rem;
+    transition: transform .3s var(--ease), background .3s ease, box-shadow .3s ease;
+}
+.button-primary i { transition: transform .3s var(--ease); }
+.button-primary:hover {
+    transform: translateY(-4px);
+    background: var(--ink);
+    box-shadow: 0 12px 30px rgba(32, 37, 29, .14);
+}
+.button-primary:hover i { transform: translateY(4px); }
+.hero-note, .hero-side-note, .hero-bottom, .catalog-footnote, .about-index, .footer-caption {
+    font-size: .62rem;
+    letter-spacing: .16em;
+    color: var(--ink-soft);
+}
+.hero-side-note {
+    position: absolute;
+    right: var(--page-gutter);
+    top: 50%;
+    writing-mode: vertical-rl;
+    transform: translateY(-50%);
+}
+.hero-bottom {
+    position: absolute;
+    left: var(--page-gutter);
+    right: var(--page-gutter);
+    bottom: 1.7rem;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+}
+.hero-bottom span:last-child { text-align: right; }
+
+/* Cinta editorial */
+.manifesto-strip {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+    min-height: 66px;
+    padding: 1rem var(--page-gutter);
+    background: var(--olive-dark);
+    color: var(--paper);
+    font-size: .65rem;
+    letter-spacing: .16em;
+    text-align: center;
+}
+.manifesto-mark { color: var(--acid); font-size: 1.15rem; }
+
+/* CatÃ¡logo */
+.products-section { padding: clamp(5rem, 9vw, 9rem) var(--page-gutter) 6rem; }
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 2rem;
+    max-width: 1320px;
+    margin: 0 auto 3.3rem;
+}
+.section-heading .eyebrow { margin-bottom: 1rem; }
+.section-heading h2 {
+    margin: 0;
+    font-size: clamp(3.3rem, 7vw, 6.5rem);
+    font-weight: 400;
+    letter-spacing: -.07em;
+    line-height: 1;
+}
+.heading-period { color: var(--clay); }
+.section-intro {
+    max-width: 300px;
+    margin: 0 0 .35rem;
+    color: var(--ink-soft);
+    font-size: .95rem;
+    line-height: 1.8;
+}
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.2rem, 3vw, 3rem);
+    max-width: 1320px;
+    margin: 0 auto;
+}
+.products-grid > * { min-width: 0; }
+.product-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #e9e5da;
+    border: 1px solid rgba(32, 37, 29, .10);
+    animation: card-enter .7s var(--ease) both;
+    transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.product-card:nth-child(2n) { animation-delay: .12s; }
+.product-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 45px rgba(32, 37, 29, .10);
+}
+.product-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.04;
+    overflow: hidden;
+    background: #dcd8cb;
+}
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .8s var(--ease), filter .6s ease;
+}
+.product-card:hover .product-image img { transform: scale(1.045); }
+.tag {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    padding: .45rem .8rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: .64rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+.product-info {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .35rem 1rem;
+    padding: 1.25rem clamp(1rem, 2vw, 1.7rem) 1.5rem;
+}
+.product-info h3 {
+    grid-column: 1;
+    margin: 0;
+    font-size: clamp(1.1rem, 1.8vw, 1.55rem);
+    font-weight: 400;
+    line-height: 1.35;
+}
+.product-info .price {
+    grid-column: 2;
+    grid-row: 1;
+    margin: .15rem 0 0;
+    color: var(--olive-dark);
+    font-size: .9rem;
+    white-space: nowrap;
+}
+.product-info .description {
+    grid-column: 1 / -1;
+    margin: .3rem 0 .8rem;
+    color: var(--ink-soft);
+    font-size: .82rem;
+    line-height: 1.7;
+}
+.btn-ws {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .85rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(32, 37, 29, .3);
+    color: var(--ink);
+    font-size: .78rem;
+    transition: color .25s ease, background .25s ease, border-color .25s ease;
+}
+.btn-ws::after {
+    content: "â†—";
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    transition: transform .25s ease;
+}
+.btn-ws:hover { background: var(--olive-dark); border-color: var(--olive-dark); color: white; }
+.btn-ws:hover::after { transform: translate(3px, -3px); }
+.btn-ws i { color: #477b4a; }
+.btn-ws:hover i { color: #9fd7a0; }
+.catalog-error, .catalog-empty {
+    grid-column: 1 / -1;
+    padding: 3rem 1rem;
+    color: var(--ink-soft);
+    text-align: center;
+    border: 1px dashed var(--line);
+}
+.catalog-error { color: #a32121; }
+.catalog-footnote {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1320px;
+    margin: 2rem auto 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+}
+
+/* Manifiesto / acerca de */
+.about-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5rem, 10vw, 9rem) var(--page-gutter);
+    background: var(--ink);
+    color: var(--paper);
+}
+.about-section::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 550px;
+    aspect-ratio: 1;
+    right: -170px;
+    top: 5%;
+    border: 1px solid rgba(242, 239, 230, .13);
+    border-radius: 50%;
+    box-shadow: 0 0 0 35px rgba(242, 239, 230, .025), 0 0 0 70px rgba(242, 239, 230, .02);
+}
+.about-index { position: absolute; top: 2rem; left: var(--page-gutter); color: rgba(242, 239, 230, .5); }
+.about-container { max-width: 900px; margin: 0 auto; text-align: center; }
+.eyebrow-light { justify-content: center; color: var(--acid); }
+.about-container h2 {
+    margin: 0 auto;
+    font-size: clamp(2.8rem, 6.5vw, 6rem);
+    font-weight: 400;
+    letter-spacing: -.06em;
+    line-height: 1.08;
+}
+.about-container h2 em { color: var(--acid); }
+.about-copy {
+    max-width: 620px;
+    margin: 2.4rem auto 2rem;
+    color: rgba(242, 239, 230, .7);
+    font-size: .95rem;
+    line-height: 1.9;
+}
+.about-copy p { margin: 0 0 1.1rem; }
+.about-copy .about-lead { color: var(--paper); font-size: 1.15rem; }
+.button-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .9rem 1.2rem;
+    border: 1px solid rgba(242, 239, 230, .4);
+    color: var(--paper);
+    font-size: .8rem;
+    transition: background .3s ease, color .3s ease, border-color .3s ease;
+}
+.button-outline:hover { background: var(--acid); border-color: var(--acid); color: var(--ink); }
+.button-arrow { margin-left: .6rem; font-size: .7rem; }
+.about-stamp {
+    position: absolute;
+    right: var(--page-gutter);
+    bottom: 2rem;
+    color: rgba(197, 209, 123, .5);
+    font-size: .65rem;
+    line-height: 1.2;
+    letter-spacing: .2em;
+    text-align: center;
+}
+
+/* Footer */
+.site-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 1rem 2rem;
+    padding: 2rem var(--page-gutter);
+    background: var(--paper-deep);
+    color: var(--ink-soft);
+    font-size: .72rem;
+}
+.site-footer p { margin: 0; }
+.site-footer p:nth-of-type(2) { text-align: right; }
+.footer-caption { grid-column: 2 / -1; text-align: right; font-size: .58rem; }
+
+/* WhatsApp flotante */
+.whatsapp-float {
+    position: fixed;
+    z-index: 1100;
+    right: 1.5rem;
+    bottom: 5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .65rem;
+    min-height: 54px;
+    padding: 0 .75rem;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 100px;
+    background: #285b3d;
+    color: white;
+    box-shadow: 0 8px 28px rgba(25, 54, 36, .24);
+    font-size: .78rem;
+    transition: transform .3s var(--ease), background .3s ease, box-shadow .3s ease;
+}
+.whatsapp-float i { font-size: 1.25rem; }
+.whatsapp-float:hover {
+    transform: translateY(-4px);
+    background: #1f4930;
+    box-shadow: 0 12px 32px rgba(25, 54, 36, .32);
+}
+
+/* Microinteracciones */
+@keyframes hero-enter {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes card-enter {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes orbit {
+    to { transform: rotate(360deg); }
+}
+
+/* Accesibilidad */
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    :root { --page-gutter: clamp(1.2rem, 4vw, 3rem); }
+    .hero { min-height: 650px; }
+    .hero-content { width: 85%; }
+    .hero::before { right: -10%; }
+    .site-footer { grid-template-columns: 1fr 1fr; }
+    .footer-caption { grid-column: 1 / -1; }
+}
+
+/* MÃ³vil */
+@media (max-width: 680px) {
+    .hero {
+        min-height: 680px;
+        min-height: min(760px, 100svh);
+        align-items: center;
+        padding: 5rem 1.35rem 6rem;
+    }
+    .hero::before { top: 54%; right: -22%; font-size: 29rem; }
+    .hero-orbit {
+        top: 25%;
+        right: 10%;
+        width: clamp(120px, 34vw, 135px);
+        height: clamp(120px, 34vw, 135px);
+    }
+    .hero-content { width: 100%; }
+    .hero .eyebrow { max-width: 250px; font-size: .58rem; }
+    .hero h1 { width: 58%; font-size: clamp(2.6rem, 13vw, 3.2rem); }
+    .hero-description { max-width: 330px; margin: 1.6rem 0 1.8rem; font-size: .95rem; }
+    .hero-actions { align-items: flex-start; flex-direction: column; gap: 1rem; }
+    .hero-side-note { display: none; }
+    .hero-bottom { left: 1.35rem; right: 1.35rem; bottom: 1.2rem; font-size: .52rem; }
+
+    .manifesto-strip { justify-content: center; gap: .7rem; min-height: 58px; padding-inline: .7rem; }
+    .manifesto-strip span:not(.manifesto-mark) { font-size: .52rem; letter-spacing: .08em; }
+    .manifesto-mark { font-size: .8rem; }
+
+    .products-section { padding: 5rem 1.1rem 4rem; }
+    .section-heading { display: block; margin-bottom: 2rem; }
+    .section-heading h2 { font-size: clamp(3.3rem, 14vw, 5rem); }
+    .section-intro { margin-top: 1rem; font-size: .85rem; }
+    .products-grid { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+    .product-image { aspect-ratio: 1 / 1.05; }
+    .product-info { padding: 1.1rem; }
+    .product-info h3 { font-size: 1.2rem; }
+    .catalog-footnote { font-size: .5rem; }
+
+    .about-section { padding: 6rem 1.35rem 5rem; }
+    .about-index { top: 1.5rem; left: 1.35rem; font-size: .52rem; }
+    .about-container h2 { font-size: clamp(2.8rem, 11vw, 4.5rem); }
+    .about-copy { margin: 1.8rem auto; font-size: .87rem; }
+    .about-copy .about-lead { font-size: 1rem; }
+    .about-stamp { right: 1.2rem; bottom: 1rem; }
+
+    .site-footer { grid-template-columns: 1fr; gap: .8rem; padding: 2rem 1.35rem 6rem; }
+    .site-footer p:nth-of-type(2), .footer-caption { text-align: left; }
+    .footer-caption { grid-column: auto; }
+    .whatsapp-float { right: 1rem; bottom: 1.5rem; min-height: 50px; }
+}
+
+</archivo>
+</proyecto>
