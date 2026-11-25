@@ -12,7 +12,7 @@ window.servicesData = {
         {
             image: "monedero.jfif",
             name: 'Monedero "Saifu"',
-            description: "Cartera/monedero de diseÃ±o tradicional y Único.",
+            description: "Cartera/monedero de diseño tradicional y único.",
             price: "$380 MXN",
             whatsappUrl: "https://wa.me/525550648075?text=Hola!%20Me%20interesa%20comprar%20el%20Monedero%20Sakura%20Cyber"
         },

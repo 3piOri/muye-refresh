@@ -139,7 +139,7 @@ function createProductForm(product) {
         imageField,
         imageUploadLabel,
         createField("Nombre", "name", product.name),
-        createField("DescripciÃ³n", "description", product.description, { multiline: true, wide: true }),
+        createField("Descripción", "description", product.description, { multiline: true, wide: true }),
         createField("Precio", "price", product.price),
         createField("Enlace de WhatsApp", "whatsappUrl", product.whatsapp_url, { type: "url" }),
         createField("Etiqueta (opcional)", "tag", product.tag, { required: false })
@@ -166,10 +166,10 @@ function createProductForm(product) {
 
 async function loadProducts() {
     if (!supabaseClient) {
-        throw new Error("Supabase no estÃ¡ inicializado.");
+        throw new Error("Supabase no está inicializado.");
     }
 
-    showStatus("Cargando catÃ¡logoâ€¦");
+    showStatus("Cargando catálogo…");
     const { data, error } = await supabaseClient
         .from("products")
         .select("id, image, name, description, price, whatsapp_url, tag, sort_order")
@@ -183,7 +183,7 @@ async function loadProducts() {
     if (data.length === 0) {
         const emptyMessage = document.createElement("p");
         emptyMessage.className = "empty-list";
-        emptyMessage.textContent = "TodavÃ­a no hay productos. Agrega el primero abajo.";
+        emptyMessage.textContent = "Todavía no hay productos. Agrega el primero abajo.";
         productList.append(emptyMessage);
     } else {
         data.forEach((product) => productList.append(createProductForm(product)));
@@ -197,10 +197,10 @@ function setAuthenticated(isAuthenticated) {
 }
 
 if (!config || !config.url || !config.anonKey) {
-    showStatus("Falta configurar la URL y la clave pÃºblica de Supabase en supabase-config.js.", "error");
+    showStatus("Falta configurar la URL y la clave pública de Supabase en supabase-config.js.", "error");
     loginForm.querySelector("button[type='submit']").disabled = true;
 } else if (!window.supabase || typeof window.supabase.createClient !== "function") {
-    showStatus("No se pudo cargar Supabase. Revisa tu conexiÃ³n a internet e intÃ©ntalo de nuevo.", "error");
+    showStatus("No se pudo cargar Supabase. Revisa tu conexión a internet e inténtalo de nuevo.", "error");
     loginForm.querySelector("button[type='submit']").disabled = true;
 } else {
     supabaseClient = window.supabase.createClient(config.url, config.anonKey);
@@ -211,7 +211,7 @@ if (!config || !config.url || !config.anonKey) {
             await loadProducts();
         } catch (error) {
             console.error(error);
-            showStatus(`No se pudo cargar el catÃ¡logo. Verifica los permisos de administrador: ${error.message}`, "error");
+            showStatus(`No se pudo cargar el catálogo. Verifica los permisos de administrador: ${error.message}`, "error");
         }
     }
 
@@ -220,7 +220,7 @@ if (!config || !config.url || !config.anonKey) {
         const values = new FormData(loginForm);
         const submitButton = loginForm.querySelector("button[type='submit']");
         submitButton.disabled = true;
-        showStatus("Validando accesoâ€¦");
+        showStatus("Validando acceso…");
 
         try {
             const { error } = await supabaseClient.auth.signInWithPassword({
@@ -229,12 +229,12 @@ if (!config || !config.url || !config.anonKey) {
             });
 
             if (error) {
-                showStatus(`No se pudo iniciar sesiÃ³n: ${error.message}`, "error");
+                showStatus(`No se pudo iniciar sesión: ${error.message}`, "error");
                 return;
             }
             await openCatalog();
         } catch (error) {
-            showStatus(`No se pudo iniciar sesiÃ³n: ${error.message}`, "error");
+            showStatus(`No se pudo iniciar sesión: ${error.message}`, "error");
         } finally {
             submitButton.disabled = false;
         }
@@ -244,13 +244,13 @@ if (!config || !config.url || !config.anonKey) {
         try {
             const { error } = await supabaseClient.auth.signOut();
             if (error) {
-                showStatus(`No se pudo cerrar sesiÃ³n: ${error.message}`, "error");
+                showStatus(`No se pudo cerrar sesión: ${error.message}`, "error");
                 return;
             }
             setAuthenticated(false);
-            showStatus("SesiÃ³n cerrada.", "success");
+            showStatus("Sesión cerrada.", "success");
         } catch (error) {
-            showStatus(`No se pudo cerrar sesiÃ³n: ${error.message}`, "error");
+            showStatus(`No se pudo cerrar sesión: ${error.message}`, "error");
         }
     });
 
@@ -292,7 +292,7 @@ if (!config || !config.url || !config.anonKey) {
 
         const form = button.closest("form");
         const productName = form.querySelector("input[name='name']").value;
-        if (!window.confirm(`Â¿Eliminar por completo "${productName}"? Esta acciÃ³n no se puede deshacer.`)) {
+        if (!window.confirm(`¿Eliminar por completo "${productName}"? Esta acción no se puede deshacer.`)) {
             return;
         }
 
@@ -350,7 +350,7 @@ if (!config || !config.url || !config.anonKey) {
     supabaseClient.auth.getSession()
         .then(({ data, error }) => {
             if (error) {
-                showStatus(`No se pudo verificar la sesiÃ³n: ${error.message}`, "error");
+                showStatus(`No se pudo verificar la sesión: ${error.message}`, "error");
                 return;
             }
             if (data.session) {
@@ -358,6 +358,6 @@ if (!config || !config.url || !config.anonKey) {
             }
         })
         .catch((error) => {
-            showStatus(`No se pudo verificar la sesiÃ³n: ${error.message}`, "error");
+            showStatus(`No se pudo verificar la sesión: ${error.message}`, "error");
         });
 }
