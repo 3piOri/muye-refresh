@@ -14,7 +14,27 @@ if (!productsSection || !productsViewport || !productsSticky) {
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let carouselEnabled = false;
 let carouselFrame = 0;
+let descriptionOverflowFrame = 0;
 let horizontalDistance = 0;
+
+function updateProductDescriptionOverflow() {
+    productsGrid.querySelectorAll(".product-card").forEach((card) => {
+        const description = card.querySelector(".description");
+        const readMoreButton = card.querySelector(".read-more");
+        readMoreButton.hidden = description.scrollHeight <= description.clientHeight + 1;
+    });
+}
+
+function scheduleDescriptionOverflowCheck() {
+    if (descriptionOverflowFrame) {
+        return;
+    }
+
+    descriptionOverflowFrame = window.requestAnimationFrame(() => {
+        descriptionOverflowFrame = 0;
+        updateProductDescriptionOverflow();
+    });
+}
 
 function updateCarouselPosition() {
     if (!carouselEnabled) {
@@ -48,6 +68,7 @@ function refreshProductCarousel() {
         productsSection.style.removeProperty("--carousel-scroll-distance");
         productsSection.style.removeProperty("--carousel-card-width");
         productsGrid.style.removeProperty("transform");
+        scheduleDescriptionOverflowCheck();
         return;
     }
 
@@ -61,12 +82,14 @@ function refreshProductCarousel() {
         productsSection.style.removeProperty("--carousel-scroll-distance");
         productsSection.style.removeProperty("--carousel-card-width");
         productsGrid.style.removeProperty("transform");
+        scheduleDescriptionOverflowCheck();
         return;
     }
 
     productsSection.style.setProperty("--carousel-scroll-distance", `${horizontalDistance}px`);
     carouselEnabled = true;
     updateCarouselPosition();
+    scheduleDescriptionOverflowCheck();
 }
 
 window.addEventListener("scroll", scheduleCarouselUpdate, { passive: true });
@@ -77,6 +100,10 @@ if ("ResizeObserver" in window) {
     const carouselResizeObserver = new ResizeObserver(refreshProductCarousel);
     carouselResizeObserver.observe(productsViewport);
     carouselResizeObserver.observe(productsGrid);
+}
+
+if (document.fonts) {
+    document.fonts.ready.then(scheduleDescriptionOverflowCheck);
 }
 
 function createProductCard(product) {
@@ -118,43 +145,40 @@ function createProductCard(product) {
     description.className = "description";
     description.textContent = product.description;
 
-    let readMoreButton;
-    let descriptionDialog;
-    if (product.description.length > 100) {
-        readMoreButton = document.createElement("button");
-        readMoreButton.className = "read-more";
-        readMoreButton.type = "button";
-        readMoreButton.textContent = "Leer más";
+    const readMoreButton = document.createElement("button");
+    readMoreButton.className = "read-more";
+    readMoreButton.type = "button";
+    readMoreButton.textContent = "Leer más";
+    readMoreButton.hidden = true;
 
-        descriptionDialog = document.createElement("dialog");
-        descriptionDialog.className = "product-description-dialog";
-        descriptionDialog.setAttribute("aria-label", `Descripción de ${product.name}`);
+    const descriptionDialog = document.createElement("dialog");
+    descriptionDialog.className = "product-description-dialog";
+    descriptionDialog.setAttribute("aria-label", `Descripción de ${product.name}`);
 
-        const dialogHeader = document.createElement("div");
-        dialogHeader.className = "description-dialog-header";
+    const dialogHeader = document.createElement("div");
+    dialogHeader.className = "description-dialog-header";
 
-        const dialogTitle = document.createElement("h3");
-        dialogTitle.textContent = product.name;
+    const dialogTitle = document.createElement("h3");
+    dialogTitle.textContent = product.name;
 
-        const closeDialogButton = document.createElement("button");
-        closeDialogButton.className = "description-dialog-close";
-        closeDialogButton.type = "button";
-        closeDialogButton.setAttribute("aria-label", "Cerrar descripción");
-        closeDialogButton.textContent = "×";
-        closeDialogButton.addEventListener("click", () => descriptionDialog.close());
+    const closeDialogButton = document.createElement("button");
+    closeDialogButton.className = "description-dialog-close";
+    closeDialogButton.type = "button";
+    closeDialogButton.setAttribute("aria-label", "Cerrar descripción");
+    closeDialogButton.textContent = "×";
+    closeDialogButton.addEventListener("click", () => descriptionDialog.close());
 
-        const fullDescription = document.createElement("p");
-        fullDescription.textContent = product.description;
+    const fullDescription = document.createElement("p");
+    fullDescription.textContent = product.description;
 
-        dialogHeader.append(dialogTitle, closeDialogButton);
-        descriptionDialog.append(dialogHeader, fullDescription);
-        descriptionDialog.addEventListener("click", (event) => {
-            if (event.target === descriptionDialog) {
-                descriptionDialog.close();
-            }
-        });
-        readMoreButton.addEventListener("click", () => descriptionDialog.showModal());
-    }
+    dialogHeader.append(dialogTitle, closeDialogButton);
+    descriptionDialog.append(dialogHeader, fullDescription);
+    descriptionDialog.addEventListener("click", (event) => {
+        if (event.target === descriptionDialog) {
+            descriptionDialog.close();
+        }
+    });
+    readMoreButton.addEventListener("click", () => descriptionDialog.showModal());
 
     const orderButton = document.createElement("a");
     orderButton.href = orderUrl.href;
@@ -167,14 +191,10 @@ function createProductCard(product) {
     orderButton.append(whatsappIcon, document.createTextNode(" Pedir por WhatsApp"));
 
     info.append(name, price, description);
-    if (readMoreButton) {
-        info.append(readMoreButton);
-    }
+    info.append(readMoreButton);
     info.append(orderButton);
     card.append(imageContainer, info);
-    if (descriptionDialog) {
-        card.append(descriptionDialog);
-    }
+    card.append(descriptionDialog);
 
     return card;
 }
